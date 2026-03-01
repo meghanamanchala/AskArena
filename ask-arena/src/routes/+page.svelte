@@ -1,39 +1,24 @@
-<script>
-	import { supabase } from '$lib/supabase'
+<main class="min-h-screen bg-slate-50 px-4 py-12">
+	<div class="mx-auto flex max-w-4xl flex-col items-center justify-center rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm">
+		<p class="text-sm font-semibold uppercase tracking-widest text-indigo-600">Ask Arena</p>
+		<h1 class="mt-3 text-4xl font-black tracking-tight text-slate-900 md:text-5xl">Ask Anything</h1>
+		<p class="mt-4 max-w-2xl text-base text-slate-600">
+			Create a live Q&amp;A room in seconds or join an existing event to submit and upvote questions in real time.
+		</p>
 
-	let title = ""
-
-	async function createEvent() {
-		const code = Math.random().toString(36).substring(2, 8)
-
-		const { data, error } = await supabase
-			.from('events')
-			.insert([
-				{
-					title,
-					code,
-					created_by: "host"
-				}
-			])
-
-		console.log("Inserted:", data)
-		console.log("Error:", error)
-	}
-</script>
-
-<div class="p-6">
-	<h1 class="text-2xl font-bold mb-4">Create Event</h1>
-
-	<input
-		class="border p-2 mr-2"
-		placeholder="Event title"
-		bind:value={title}
-	/>
-
-	<button
-		class="bg-blue-500 text-white px-4 py-2"
-		on:click={createEvent}
-	>
-		Create
-	</button>
-</div>
+		<div class="mt-8 flex w-full max-w-md flex-col gap-3 sm:flex-row">
+			<a
+				href="/create"
+				class="w-full rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700"
+			>
+				Create Event
+			</a>
+			<a
+				href="/join"
+				class="w-full rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition hover:bg-slate-100"
+			>
+				Join Event
+			</a>
+		</div>
+	</div>
+</main>
