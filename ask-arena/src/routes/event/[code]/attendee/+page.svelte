@@ -156,7 +156,7 @@
     }
   };
 
-  const voteQuestion = async (question: { id: string; votes: number }) => {
+  const voteQuestion = async (question: { id: string }) => {
     if (!event || event.status !== 'live') return;
 
     const trimmedName = attendeeName.trim();
@@ -169,38 +169,18 @@
     errorMessage = '';
 
     try {
-      const { data: existingVote, error: existingVoteError } = await supabase
-        .from('votes')
-        .select('id')
-        .eq('question_id', question.id)
-        .eq('voter_name', trimmedName)
-        .maybeSingle();
-
-      if (existingVoteError) {
-        throw existingVoteError;
-      }
-
-      if (existingVote) {
-        errorMessage = 'You have already voted for this question.';
-        return;
-      }
-
-      const { error: voteInsertError } = await supabase.from('votes').insert({
-        question_id: question.id,
-        voter_name: trimmedName
+      const { data, error } = await supabase.rpc('cast_vote', {
+        p_question_id: question.id,
+        p_voter_name: trimmedName
       });
 
-      if (voteInsertError) {
-        throw voteInsertError;
+      if (error) {
+        throw error;
       }
 
-      const { error: questionUpdateError } = await supabase
-        .from('questions')
-        .update({ votes: question.votes + 1 })
-        .eq('id', question.id);
-
-      if (questionUpdateError) {
-        throw questionUpdateError;
+      if (!data) {
+        errorMessage = 'You have already voted for this question.';
+        return;
       }
     } catch (error) {
       errorMessage = error instanceof Error ? error.message : 'Failed to vote for this question.';
