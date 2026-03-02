@@ -20,19 +20,19 @@
 	} = $props();
 </script>
 
-<article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+<article class="theme-question rounded-xl p-4">
 	<div class="flex items-start justify-between gap-4">
 		<div>
-			<p class="text-sm text-slate-800">{question.content}</p>
-			<p class="mt-2 text-xs text-slate-500">By {question.author_name}</p>
+			<p class="theme-text text-sm">{question.content}</p>
+			<p class="mt-2 text-xs uppercase tracking-[0.12em] text-slate-400">By {question.author_name}</p>
 		</div>
 
 		<div class="flex items-center gap-2">
-			<span class="rounded-lg bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-800">{question.votes}</span>
+			<span class="rounded-lg border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-sm font-semibold text-emerald-200">{question.votes}</span>
 			{#if onVote}
 				<button
 					type="button"
-					class="rounded-lg bg-indigo-600 px-3 py-1 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+					class="btn-primary px-3 py-1"
 					onclick={() => onVote?.(question)}
 					disabled={!canVote || isVoting}
 				>

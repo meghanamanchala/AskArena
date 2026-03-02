@@ -224,8 +224,8 @@
   });
 </script>
 
-<main class="min-h-screen bg-slate-50 px-4 py-8">
-  <div class="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[300px_1fr]">
+<main class="page-shell">
+  <div class="page-wrap grid gap-6 lg:grid-cols-[300px_1fr]">
     <Sidebar
       title="Attendee View"
       subtitle="Submit and vote while the event is live."
@@ -235,31 +235,31 @@
       ]}
     >
       {#if event}
-        <p class="text-sm text-slate-600">Event</p>
-        <p class="mt-1 text-base font-semibold text-slate-900">{event.title}</p>
+        <p class="muted-text text-xs uppercase tracking-[0.2em]">Event</p>
+        <p class="theme-text mt-1 text-base font-semibold">{event.title}</p>
         <div class="mt-3"><StatusBadge status={event.status} /></div>
       {/if}
     </Sidebar>
 
     <section>
       {#if isLoading}
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-600 shadow-sm">Loading event...</div>
+        <div class="neon-panel p-6 text-sm muted-text">Loading event...</div>
       {:else if errorMessage && !event}
-        <div class="rounded-2xl border border-rose-200 bg-rose-50 p-6 text-sm text-rose-700 shadow-sm">{errorMessage}</div>
+        <div class="neon-panel p-6 text-sm text-rose-200">{errorMessage}</div>
       {:else if event}
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="neon-panel p-5">
           <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h1 class="text-2xl font-bold text-slate-900">{event.title}</h1>
-              <p class="mt-1 text-sm text-slate-600">Hosted by {event.host_name} · Code {event.code}</p>
+              <h1 class="theme-text text-2xl font-black">{event.title}</h1>
+              <p class="mt-1 text-sm muted-text">Hosted by {event.host_name} · Code {event.code}</p>
             </div>
             <StatusBadge status={event.status} />
           </div>
 
           {#if event.status === 'waiting'}
-            <div class="mt-5 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">Waiting for host to start the event.</div>
+            <div class="mt-5 rounded-lg border border-amber-400/25 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">Waiting for host to start the event.</div>
           {:else if event.status === 'closed'}
-            <div class="mt-5 rounded-lg bg-slate-100 px-4 py-3 text-sm text-slate-700">This event is closed.</div>
+            <div class="mt-5 rounded-lg border border-slate-400/25 bg-slate-500/10 px-4 py-3 text-sm text-slate-300">This event is closed.</div>
           {:else}
             <form
               class="mt-5 space-y-3"
@@ -269,37 +269,37 @@
               }}
             >
               <div>
-                <label class="mb-1 block text-sm font-medium text-slate-700" for="attendee-name">Your name</label>
+                <label class="field-label" for="attendee-name">Your name</label>
                 <input
                   id="attendee-name"
                   type="text"
                   required
                   maxlength="60"
                   bind:value={attendeeName}
-                  class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  class="field-input"
                 />
               </div>
               <div>
-                <label class="mb-1 block text-sm font-medium text-slate-700" for="question">Ask a question</label>
+                <label class="field-label" for="question">Ask a question</label>
                 <textarea
                   id="question"
                   required
                   rows="3"
                   maxlength="500"
                   bind:value={questionContent}
-                  class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  class="field-input"
                   placeholder="What would you like to ask?"
                 ></textarea>
               </div>
 
               {#if errorMessage}
-                <p class="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">{errorMessage}</p>
+                <p class="alert-error">{errorMessage}</p>
               {/if}
 
               <button
                 type="submit"
                 disabled={isSubmittingQuestion}
-                class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+                class="btn-primary"
               >
                 {isSubmittingQuestion ? 'Submitting...' : 'Submit Question'}
               </button>
@@ -307,13 +307,13 @@
           {/if}
         </div>
 
-        <div class="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 class="text-lg font-bold text-slate-900">Questions</h2>
-          <p class="mt-1 text-sm text-slate-600">Live list sorted by votes.</p>
+        <div class="mt-6 neon-panel p-5">
+          <h2 class="theme-text text-lg font-black uppercase tracking-[0.12em]">Questions</h2>
+          <p class="mt-1 text-sm muted-text">Live list sorted by votes.</p>
 
           <div class="mt-4 space-y-3">
             {#if questions.length === 0}
-              <p class="rounded-lg bg-slate-50 px-4 py-3 text-sm text-slate-600">No questions yet.</p>
+              <p class="alert-info">No questions yet.</p>
             {:else}
               {#each questions as question (question.id)}
                 <QuestionCard

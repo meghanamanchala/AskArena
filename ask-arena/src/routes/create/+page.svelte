@@ -52,10 +52,12 @@
   };
 </script>
 
-<main class="min-h-screen bg-slate-50 px-4 py-12">
-  <div class="mx-auto max-w-xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-    <h1 class="text-2xl font-bold text-slate-900">Create Event</h1>
-    <p class="mt-2 text-sm text-slate-600">Set up your Q&amp;A room and share the code with attendees.</p>
+<main class="page-shell">
+  <div class="page-wrap">
+    <div class="mx-auto max-w-xl neon-panel p-8">
+      <p class="neon-kicker">Host Setup</p>
+      <h1 class="theme-text mt-2 neon-heading">Create Event</h1>
+      <p class="mt-2 text-sm muted-text">Set up your Q&amp;A room and share the code with attendees.</p>
 
     <form
       class="mt-6 space-y-4"
@@ -65,44 +67,45 @@
       }}
     >
       <div>
-        <label class="mb-1 block text-sm font-medium text-slate-700" for="title">Event title</label>
+        <label class="field-label" for="title">Event title</label>
         <input
           id="title"
           type="text"
           required
           maxlength="120"
           bind:value={title}
-          class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          class="field-input"
           placeholder="Weekly Product AMA"
         />
       </div>
 
       <div>
-        <label class="mb-1 block text-sm font-medium text-slate-700" for="host">Host name</label>
+        <label class="field-label" for="host">Host name</label>
         <input
           id="host"
           type="text"
           required
           maxlength="60"
           bind:value={hostName}
-          class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          class="field-input"
           placeholder="Alex"
         />
       </div>
 
       {#if errorMessage}
-        <p class="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">{errorMessage}</p>
+        <p class="alert-error">{errorMessage}</p>
       {/if}
 
       <button
         type="submit"
         disabled={isSubmitting}
-        class="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+        class="btn-secondary w-full"
       >
         {isSubmitting ? 'Creating...' : 'Create Event'}
       </button>
     </form>
 
-    <a href="/" class="mt-5 inline-block text-sm font-medium text-indigo-700 hover:text-indigo-800">Back to home</a>
+    <a href="/" class="theme-link mt-5 inline-flex text-sm font-medium transition hover:opacity-80">Back to home</a>
+    </div>
   </div>
 </main>
