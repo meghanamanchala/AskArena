@@ -19,10 +19,11 @@
 	} = $props();
 </script>
 
-<aside class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-	<h2 class="text-lg font-bold text-slate-900">{title}</h2>
+
+<aside class="neon-panel p-5">
+	<h2 class="theme-text text-lg font-black uppercase tracking-[0.12em]">{title}</h2>
 	{#if subtitle}
-		<p class="mt-1 text-sm text-slate-600">{subtitle}</p>
+		<p class="mt-2 text-sm muted-text">{subtitle}</p>
 	{/if}
 
 	{#if links.length > 0}
@@ -30,7 +31,7 @@
 			{#each links as link}
 				<a
 					href={link.href}
-					class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+					class="panel-chip theme-text block rounded-xl px-3 py-2 text-sm font-medium transition hover:border-cyan-300/30"
 				>
 					{link.label}
 				</a>
@@ -38,7 +39,7 @@
 		</nav>
 	{/if}
 
-	<div class="mt-5 border-t border-slate-200 pt-4">
+	<div class="mt-5 border-t border-slate-500/20 pt-4">
 		{@render children?.()}
 	</div>
 </aside>

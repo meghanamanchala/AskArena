@@ -171,8 +171,8 @@
   });
 </script>
 
-<main class="min-h-screen bg-slate-50 px-4 py-8">
-  <div class="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[300px_1fr]">
+<main class="page-shell">
+  <div class="page-wrap grid gap-6 lg:grid-cols-[300px_1fr]">
     <Sidebar
       title="Host Panel"
       subtitle="Control event state and watch questions update live."
@@ -182,16 +182,16 @@
       ]}
     >
       {#if event}
-        <p class="text-sm text-slate-600">Room code</p>
-        <p class="mt-1 font-mono text-xl font-black tracking-widest text-slate-900">{event.code}</p>
+        <p class="muted-text text-xs uppercase tracking-[0.2em]">Room code</p>
+    		<p class="display-accent mt-1 font-mono text-xl font-black tracking-widest">{event.code}</p>
       {/if}
     </Sidebar>
 
     <section>
       {#if isLoading}
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-600 shadow-sm">Loading event...</div>
+        <div class="neon-panel p-6 text-sm muted-text">Loading event...</div>
       {:else if errorMessage}
-        <div class="rounded-2xl border border-rose-200 bg-rose-50 p-6 text-sm text-rose-700 shadow-sm">{errorMessage}</div>
+        <div class="neon-panel p-6 text-sm text-rose-200">{errorMessage}</div>
       {:else if event}
         <EventCard event={event}>
           <div class="flex flex-wrap gap-2">
@@ -199,7 +199,7 @@
               type="button"
               onclick={() => updateStatus('live')}
               disabled={isUpdatingStatus || event.status === 'live'}
-              class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+              class="btn-primary"
             >
               Start Event
             </button>
@@ -207,20 +207,20 @@
               type="button"
               onclick={() => updateStatus('closed')}
               disabled={isUpdatingStatus || event.status === 'closed'}
-              class="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+              class="rounded-xl bg-rose-500 px-5 py-3 text-sm font-semibold text-rose-50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Close Event
             </button>
           </div>
         </EventCard>
 
-        <div class="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h3 class="text-lg font-bold text-slate-900">Questions</h3>
-          <p class="mt-1 text-sm text-slate-600">Ranked by votes in real time.</p>
+        <div class="mt-6 neon-panel p-5">
+          <h3 class="theme-text text-lg font-black uppercase tracking-[0.12em]">Questions</h3>
+          <p class="mt-1 text-sm muted-text">Ranked by votes in real time.</p>
 
           <div class="mt-4 space-y-3">
             {#if questions.length === 0}
-              <p class="rounded-lg bg-slate-50 px-4 py-3 text-sm text-slate-600">No questions yet.</p>
+              <p class="alert-info">No questions yet.</p>
             {:else}
               {#each questions as question (question.id)}
                 <QuestionCard {question} />

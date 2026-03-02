@@ -39,10 +39,12 @@
   };
 </script>
 
-<main class="min-h-screen bg-slate-50 px-4 py-12">
-  <div class="mx-auto max-w-xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-    <h1 class="text-2xl font-bold text-slate-900">Join Event</h1>
-    <p class="mt-2 text-sm text-slate-600">Enter your event code and name to join the live Q&amp;A.</p>
+<main class="page-shell">
+  <div class="page-wrap">
+    <div class="mx-auto max-w-xl neon-panel p-8">
+    <p class="neon-kicker">Attendee Access</p>
+    <h1 class="theme-text mt-2 neon-heading">Join Event</h1>
+    <p class="mt-2 text-sm muted-text">Enter your event code and name to join the live Q&amp;A.</p>
 
     <form
       class="mt-6 space-y-4"
@@ -52,44 +54,45 @@
       }}
     >
       <div>
-        <label class="mb-1 block text-sm font-medium text-slate-700" for="code">Event code</label>
+        <label class="field-label" for="code">Event code</label>
         <input
           id="code"
           type="text"
           required
           maxlength="6"
           bind:value={enteredCode}
-          class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm uppercase"
+          class="field-input uppercase"
           placeholder="A1B2C3"
         />
       </div>
 
       <div>
-        <label class="mb-1 block text-sm font-medium text-slate-700" for="name">Your name</label>
+        <label class="field-label" for="name">Your name</label>
         <input
           id="name"
           type="text"
           required
           maxlength="60"
           bind:value={userName}
-          class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          class="field-input"
           placeholder="Jordan"
         />
       </div>
 
       {#if errorMessage}
-        <p class="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">{errorMessage}</p>
+        <p class="alert-error">{errorMessage}</p>
       {/if}
 
       <button
         type="submit"
         disabled={isJoining}
-        class="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+        class="btn-primary w-full"
       >
         {isJoining ? 'Joining...' : 'Join Event'}
       </button>
     </form>
 
-    <a href="/" class="mt-5 inline-block text-sm font-medium text-indigo-700 hover:text-indigo-800">Back to home</a>
+    <a href="/" class="theme-link mt-5 inline-flex text-sm font-medium transition hover:opacity-80">Back to home</a>
+    </div>
   </div>
 </main>
