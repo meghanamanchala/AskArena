@@ -29,6 +29,7 @@
   let event: EventRow | null = null;
   let questions: QuestionRow[] = [];
   let attendeeName = '';
+  let attendeeVoterId = '';
   let questionContent = '';
   let errorMessage = '';
   let isLoading = true;
@@ -169,17 +170,29 @@
     errorMessage = '';
 
     try {
-      const { data, error } = await supabase.rpc('cast_vote', {
+      let { data, error } = await supabase.rpc('cast_vote', {
         p_question_id: question.id,
-        p_voter_name: trimmedName
+        p_voter_name: trimmedName,
+        p_voter_id: attendeeVoterId
       });
+
+      if (error?.code === 'PGRST202') {
+        const legacyVoterName = `${trimmedName}::${attendeeVoterId}`;
+        const fallback = await supabase.rpc('cast_vote', {
+          p_question_id: question.id,
+          p_voter_name: legacyVoterName
+        });
+
+        data = fallback.data;
+        error = fallback.error;
+      }
 
       if (error) {
         throw error;
       }
 
       if (!data) {
-        errorMessage = 'You have already voted for this question.';
+        errorMessage = 'Vote was not recorded. You may have already voted for this question.';
         return;
       }
     } catch (error) {
@@ -191,6 +204,15 @@
 
   onMount(() => {
     let active = true;
+
+    const voterStorageKey = 'askarena-voter-id';
+    const existingVoterId = localStorage.getItem(voterStorageKey);
+    if (existingVoterId) {
+      attendeeVoterId = existingVoterId;
+    } else {
+      attendeeVoterId = crypto.randomUUID();
+      localStorage.setItem(voterStorageKey, attendeeVoterId);
+    }
 
     const nameFromQuery = $page.url.searchParams.get('name');
     if (nameFromQuery) {
