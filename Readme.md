@@ -1,6 +1,6 @@
-# LivePulse – Real-Time Event Q&A Platform
+# AskArena – Real-Time Event Q&A Platform
 
-LivePulse is a real-time audience engagement platform built using SvelteKit and Supabase. It enables attendees to submit and upvote questions during live events, with instant ranking updates and secure role-based access control.
+AskArena is a real-time audience engagement platform built using SvelteKit and Supabase. It enables attendees to submit and upvote questions during live events, with instant ranking updates and secure role-based access control.
 
 ---
 
