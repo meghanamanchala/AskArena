@@ -23,6 +23,8 @@
     content: string;
     author_name: string;
     votes: number;
+    is_answered: boolean;
+    is_deleted: boolean;
     created_at: string;
   }
 
@@ -36,6 +38,9 @@
   let isSubmittingQuestion = false;
   let votingQuestionId = '';
   let votedQuestionIds: Set<string> = new Set();
+
+  $: activeQuestions = questions.filter(q => !q.is_deleted && !q.is_answered);
+  $: answeredQuestions = questions.filter(q => !q.is_deleted && q.is_answered);
 
   let questionChannel: ReturnType<typeof supabase.channel> | null = null;
   let statusChannel: ReturnType<typeof supabase.channel> | null = null;
@@ -346,14 +351,14 @@
         </div>
 
         <div class="mt-6 neon-panel p-5">
-          <h2 class="theme-text text-lg font-black uppercase tracking-[0.12em]">Questions</h2>
+          <h2 class="theme-text text-lg font-black uppercase tracking-[0.12em]">Active Questions</h2>
           <p class="mt-1 text-sm muted-text">Live list sorted by votes.</p>
 
           <div class="mt-4 space-y-3">
-            {#if questions.length === 0}
-              <p class="alert-info">No questions yet.</p>
+            {#if activeQuestions.length === 0}
+              <p class="alert-info">No active questions yet.</p>
             {:else}
-              {#each questions as question (question.id)}
+              {#each activeQuestions as question (question.id)}
                 <QuestionCard
                   {question}
                   onVote={voteQuestion}
@@ -364,6 +369,19 @@
               {/each}
             {/if}
           </div>
+
+          {#if answeredQuestions.length > 0}
+            <div class="mt-8 border-t border-slate-500/20 pt-6">
+              <h3 class="theme-text text-sm font-black uppercase tracking-[0.12em] text-slate-400">Answered Questions</h3>
+              <div class="mt-4 space-y-3">
+                {#each answeredQuestions as question (question.id)}
+                  <QuestionCard
+                    {question}
+                  />
+                {/each}
+              </div>
+            </div>
+          {/if}
         </div>
       {/if}
     </section>

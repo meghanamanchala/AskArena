@@ -15,8 +15,16 @@ create table if not exists public.questions (
   content text not null,
   author_name text not null,
   votes int not null default 0,
+  is_answered boolean not null default false,
+  is_deleted boolean not null default false,
   created_at timestamptz not null default now()
 );
+
+alter table public.questions
+add column if not exists is_answered boolean not null default false;
+
+alter table public.questions
+add column if not exists is_deleted boolean not null default false;
 
 create table if not exists public.votes (
   id uuid primary key default gen_random_uuid(),
@@ -80,6 +88,7 @@ grant select, insert on table public.events to anon, authenticated;
 grant update (status) on table public.events to anon, authenticated;
 
 grant select, insert on table public.questions to anon, authenticated;
+grant update (is_answered, is_deleted) on table public.questions to anon, authenticated;
 
 grant select, insert on table public.votes to anon, authenticated;
 
@@ -132,6 +141,13 @@ with check (
 );
 
 drop policy if exists "Public can update question votes" on public.questions;
+
+drop policy if exists "Public can update questions" on public.questions;
+create policy "Public can update questions"
+on public.questions
+for update
+using (true)
+with check (true);
 
 drop policy if exists "Public can read votes" on public.votes;
 create policy "Public can read votes"

@@ -23,6 +23,8 @@
     content: string;
     author_name: string;
     votes: number;
+    is_answered: boolean;
+    is_deleted: boolean;
     created_at: string;
   }
 
@@ -36,6 +38,9 @@
   let statusChannel: ReturnType<typeof supabase.channel> | null = null;
 
   let code = '';
+
+  $: activeQuestions = questions.filter(q => !q.is_deleted && !q.is_answered);
+  $: answeredQuestions = questions.filter(q => !q.is_deleted && q.is_answered);
 
   $: code = $page.params.code?.toUpperCase() ?? '';
 
@@ -75,6 +80,44 @@
     }
 
     questions = (data ?? []) as QuestionRow[];
+  };
+
+  const markQuestionAnswered = async (question: { id: string }) => {
+    try {
+      const { error } = await supabase
+        .from('questions')
+        .update({ is_answered: true })
+        .eq('id', question.id);
+
+      if (error) {
+        throw error;
+      }
+
+      questions = questions.map(q => q.id === question.id ? { ...q, is_answered: true } : q);
+    } catch (err) {
+      errorMessage = err instanceof Error ? err.message : 'Failed to mark question as answered.';
+    }
+  };
+
+  const deleteQuestion = async (question: { id: string }) => {
+    if (!confirm('Are you sure you want to delete this question?')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('questions')
+        .update({ is_deleted: true })
+        .eq('id', question.id);
+
+      if (error) {
+        throw error;
+      }
+
+      questions = questions.filter(q => q.id !== question.id);
+    } catch (err) {
+      errorMessage = err instanceof Error ? err.message : 'Failed to delete question.';
+    }
   };
 
   const updateStatus = async (nextStatus: EventStatus) => {
@@ -215,18 +258,36 @@
         </EventCard>
 
         <div class="mt-6 neon-panel p-5">
-          <h3 class="theme-text text-lg font-black uppercase tracking-[0.12em]">Questions</h3>
+          <h3 class="theme-text text-lg font-black uppercase tracking-[0.12em]">Active Questions</h3>
           <p class="mt-1 text-sm muted-text">Ranked by votes in real time.</p>
 
           <div class="mt-4 space-y-3">
-            {#if questions.length === 0}
-              <p class="alert-info">No questions yet.</p>
+            {#if activeQuestions.length === 0}
+              <p class="alert-info">No active questions yet.</p>
             {:else}
-              {#each questions as question (question.id)}
-                <QuestionCard {question} />
+              {#each activeQuestions as question (question.id)}
+                <QuestionCard
+                  {question}
+                  onMarkAnswered={markQuestionAnswered}
+                  onDelete={deleteQuestion}
+                />
               {/each}
             {/if}
           </div>
+
+          {#if answeredQuestions.length > 0}
+            <div class="mt-8 border-t border-slate-500/20 pt-6">
+              <h4 class="theme-text text-sm font-black uppercase tracking-[0.12em] text-slate-400">Answered Questions</h4>
+              <div class="mt-4 space-y-3">
+                {#each answeredQuestions as question (question.id)}
+                  <QuestionCard
+                    {question}
+                    onDelete={deleteQuestion}
+                  />
+                {/each}
+              </div>
+            </div>
+          {/if}
         </div>
       {/if}
     </section>
