@@ -11,12 +11,14 @@
 		question,
 		onVote,
 		canVote = true,
-		isVoting = false
+		isVoting = false,
+		hasVoted = false
 	}: {
 		question: QuestionModel;
 		onVote?: ((question: QuestionModel) => void) | undefined;
 		canVote?: boolean;
 		isVoting?: boolean;
+		hasVoted?: boolean;
 	} = $props();
 </script>
 
@@ -32,13 +34,20 @@
 			{#if onVote}
 				<button
 					type="button"
-					class="btn-primary px-3 py-1"
-					onclick={() => onVote?.(question)}
-					disabled={!canVote || isVoting}
+					class={hasVoted ? "border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-sm font-semibold text-emerald-300 cursor-default rounded-xl" : "btn-primary px-3 py-1"}
+					onclick={() => !hasVoted && onVote?.(question)}
+					disabled={(!hasVoted && !canVote) || isVoting}
 				>
-					{isVoting ? 'Voting...' : 'Vote'}
+					{#if isVoting}
+						Voting...
+					{:else if hasVoted}
+						✓ Voted
+					{:else}
+						Vote
+					{/if}
 				</button>
 			{/if}
 		</div>
 	</div>
 </article>
+
