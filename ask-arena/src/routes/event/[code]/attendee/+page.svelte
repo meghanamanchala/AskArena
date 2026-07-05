@@ -35,6 +35,7 @@
   let isLoading = true;
   let isSubmittingQuestion = false;
   let votingQuestionId = '';
+  let votedQuestionIds: Set<string> = new Set();
 
   let questionChannel: ReturnType<typeof supabase.channel> | null = null;
   let statusChannel: ReturnType<typeof supabase.channel> | null = null;
@@ -195,6 +196,9 @@
         errorMessage = 'Vote was not recorded. You may have already voted for this question.';
         return;
       }
+
+      votedQuestionIds.add(question.id);
+      votedQuestionIds = votedQuestionIds;
     } catch (error) {
       errorMessage = error instanceof Error ? error.message : 'Failed to vote for this question.';
     } finally {
@@ -226,6 +230,18 @@
       try {
         await loadEvent();
         await loadQuestions();
+
+        const loadUserVotes = async () => {
+          if (!attendeeVoterId) return;
+          const { data, error } = await supabase
+            .from('votes')
+            .select('question_id')
+            .eq('voter_key', attendeeVoterId);
+          if (data) {
+            votedQuestionIds = new Set(data.map(v => v.question_id));
+          }
+        };
+        await loadUserVotes();
 
         if (active) {
           setupRealtime();
@@ -343,6 +359,7 @@
                   onVote={voteQuestion}
                   canVote={event.status === 'live'}
                   isVoting={votingQuestionId === question.id}
+                  hasVoted={votedQuestionIds.has(question.id)}
                 />
               {/each}
             {/if}
